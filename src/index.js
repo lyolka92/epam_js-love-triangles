@@ -6,15 +6,33 @@
 module.exports = function getLoveTrianglesCount(preferences = []) {
     let loveTrianglesCount = 0;
 
-    if (preferences.length > 2) {
-        preferences.forEach((spichonee, index) => {
-            const firstLoverIndex = spichonee - 1,
-                nextLoverIndex = preferences[firstLoverIndex] - 1;
-            if (preferences[nextLoverIndex] - 1 === index) {
-                loveTrianglesCount += 1;
-            }
-        });
+    if (preferences.length <= 2) {
+        return 0;
     }
 
-    return Math.floor(loveTrianglesCount/3);
+    preferences.forEach((spichonee, index) => {
+        if (spichonee === null) {
+            return;
+        }
+
+        let firstLoverIndex = index,
+            secondLoverIndex = spichonee - 1,
+            thirdLoverIndex = preferences[secondLoverIndex] - 1;
+
+        if (firstLoverIndex === secondLoverIndex
+            || secondLoverIndex === thirdLoverIndex
+            || thirdLoverIndex === firstLoverIndex) {
+            return;
+        }
+
+        if (preferences[thirdLoverIndex] - 1 === firstLoverIndex) {
+            loveTrianglesCount += 1;
+
+            preferences[firstLoverIndex] = null;
+            preferences[secondLoverIndex] = null;
+            preferences[thirdLoverIndex] = null;
+        }
+    });
+
+    return loveTrianglesCount;
 };
